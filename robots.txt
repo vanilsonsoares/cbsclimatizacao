@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://cbsclimatizacao.com.br/sitemap.xml
+Sitemap: https://vanilsonsoares.github.io/cbsclimatizacao/sitemap.xml
