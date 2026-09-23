@@ -3,6 +3,30 @@ const menu = document.querySelector('.main-nav');
 const form = document.querySelector('#quote-form');
 const formStatus = document.querySelector('#form-status');
 
+window.dataLayer = window.dataLayer || [];
+
+function trackLead(eventName, details = {}) {
+  window.dataLayer.push({
+    event: eventName,
+    lead_source: 'website',
+    ...details
+  });
+}
+
+document.querySelectorAll('a[href*="wa.me"]').forEach((link) => {
+  link.addEventListener('click', () => {
+    trackLead('click_whatsapp', {
+      link_location: link.classList.contains('whatsapp-float') ? 'floating_button' : 'page'
+    });
+  });
+});
+
+document.querySelectorAll('a[href^="tel:"]').forEach((link) => {
+  link.addEventListener('click', () => {
+    trackLead('click_phone');
+  });
+});
+
 document.querySelector('#year').textContent = new Date().getFullYear();
 
 menuButton?.addEventListener('click', () => {
@@ -32,6 +56,11 @@ form.addEventListener('submit', (event) => {
   ];
   if (detalhes) lines.push(`Detalhes: ${detalhes}`);
   const url = `https://wa.me/5511981353298?text=${encodeURIComponent(lines.join('\n'))}`;
+  trackLead('generate_lead', {
+    service_type: String(data.get('servico') || ''),
+    property_type: String(data.get('imovel') || ''),
+    equipment_quantity: String(data.get('quantidade') || '')
+  });
   formStatus.textContent = 'Abrindo o atendimento da CBS no WhatsApp...';
   window.open(url, '_blank', 'noopener,noreferrer');
 });
