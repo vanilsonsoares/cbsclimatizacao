@@ -6,11 +6,19 @@ const formStatus = document.querySelector('#form-status');
 window.dataLayer = window.dataLayer || [];
 
 function trackLead(eventName, details = {}) {
-  window.dataLayer.push({
-    event: eventName,
+  const payload = {
     lead_source: 'website',
     ...details
+  };
+
+  window.dataLayer.push({
+    event: eventName,
+    ...payload
   });
+
+  if (typeof window.gtag === 'function') {
+    window.gtag('event', eventName, payload);
+  }
 }
 
 document.querySelectorAll('a[href*="wa.me"]').forEach((link) => {
