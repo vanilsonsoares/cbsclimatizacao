@@ -6,11 +6,25 @@ const formStatus = document.querySelector('#form-status');
 window.dataLayer = window.dataLayer || [];
 
 function trackLead(eventName, details = {}) {
-  window.dataLayer.push({
-    event: eventName,
+  const payload = {
     lead_source: 'website',
     ...details
+  };
+
+  window.dataLayer.push({
+    event: eventName,
+    ...payload
   });
+
+  if (typeof window.gtag === 'function') {
+    window.gtag('event', eventName, payload);
+
+    if (eventName === 'click_whatsapp' || eventName === 'generate_lead') {
+      window.gtag('event', 'conversion', {
+        send_to: 'AW-748019136/4DmWCIO5koQdEMC71-QC'
+      });
+    }
+  }
 }
 
 document.querySelectorAll('a[href*="wa.me"]').forEach((link) => {
